@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Navigation } from "@/components/Navigation";
 import { GeometryViewer } from "@/components/GeometryViewer";
 import { PhasedArraySimulator } from "@/components/PhasedArraySimulator";
+import { PhotoGallery } from "@/components/PhotoGallery";
 import { ChatBot } from "@/components/ChatBot";
 import { ApiKeyHelp } from "@/components/ApiKeyHelp";
-import heroImage from "@/assets/milk-hill-hero.jpg";
+import heroImage from "@/assets/milk-hill-galaxy-spiral.jpg";
 
 const Index = () => {
   return (
@@ -55,6 +57,102 @@ const Index = () => {
         <div className="absolute top-20 left-20 w-16 h-16 rounded-full bg-primary/20 animate-float-glow" />
         <div className="absolute bottom-20 right-20 w-12 h-12 rounded-full bg-secondary/30 animate-float-glow" style={{ animationDelay: '1s' }} />
         <div className="absolute top-1/2 left-10 w-8 h-8 rounded-full bg-accent/25 animate-float-glow" style={{ animationDelay: '2s' }} />
+      </section>
+
+      {/* Photo Gallery Section */}
+      <PhotoGallery />
+
+      {/* Educational Context Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 cosmic-text">
+              The Engineering Blueprint
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Understanding the technical precision behind the world's most complex crop formation
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <Card className="p-6 glass-morphism">
+              <h3 className="text-2xl font-bold mb-4 cosmic-text">Technical Specifications</h3>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Formation Date:</strong> August 13, 2001</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Location:</strong> Milk Hill, Wiltshire, England</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Diameter:</strong> Approximately 1000ft (300m)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Circle Count:</strong> 409 individual elements</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Formation Time:</strong> 6 hours of darkness</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Weather:</strong> Heavy rainfall during formation</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-primary">•</span>
+                  <span><strong>Evidence:</strong> No visible entry tracks or footprints</span>
+                </li>
+              </ul>
+            </Card>
+
+            <Card className="p-6 glass-morphism">
+              <h3 className="text-2xl font-bold mb-4 cosmic-text">Array Characteristics</h3>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <span className="text-secondary">•</span>
+                  <span><strong>Pattern:</strong> 6-fold spiral with connecting arms</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-secondary">•</span>
+                  <span><strong>Geometry:</strong> Logarithmic spiral structure</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-secondary">•</span>
+                  <span><strong>Precision:</strong> Sub-meter accuracy in positioning</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-secondary">•</span>
+                  <span><strong>Scaling:</strong> Variable circle sizes following mathematical progression</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-secondary">•</span>
+                  <span><strong>Symmetry:</strong> Perfect rotational symmetry</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-secondary">•</span>
+                  <span><strong>Application:</strong> Matches phased array antenna design principles</span>
+                </li>
+              </ul>
+            </Card>
+          </div>
+
+          <Card className="p-6 glass-morphism text-center border-accent/20">
+            <h3 className="text-xl font-bold mb-4 cosmic-text">Photography Attribution</h3>
+            <p className="text-muted-foreground mb-4">
+              All authentic Milk Hill crop circle photographs courtesy of 
+              <strong className="text-foreground"> Steve Alexander Photography</strong> and 
+              <strong className="text-foreground"> Temporary Temples</strong>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              These images represent some of the highest quality documentation of the 2001 Milk Hill formations, 
+              captured using professional aerial photography techniques during the height of the crop circle season.
+            </p>
+          </Card>
+        </div>
       </section>
 
       {/* Interactive Geometry Section */}

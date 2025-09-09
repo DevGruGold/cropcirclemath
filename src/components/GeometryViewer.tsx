@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import galaxySpiralImage from "@/assets/milk-hill-galaxy-spiral.jpg";
 
 // Simulate the Milk Hill crop circle data (409 circles)
 const generateMilkHillData = () => {
@@ -56,6 +59,8 @@ const GeometryViewer = () => {
   const [viewMode, setViewMode] = useState<"wheat" | "array">("wheat");
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedCircle, setSelectedCircle] = useState<number | null>(null);
+  const [showPhoto, setShowPhoto] = useState(false);
+  const [photoOpacity, setPhotoOpacity] = useState(0.7);
 
   const circleData = generateMilkHillData();
 
@@ -72,6 +77,27 @@ const GeometryViewer = () => {
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", `0 0 ${width} ${height}`);
+
+    // Add background image if enabled
+    if (showPhoto) {
+      svg.append("defs")
+        .append("pattern")
+        .attr("id", "photo-pattern")
+        .attr("patternUnits", "userSpaceOnUse")
+        .attr("width", width)
+        .attr("height", height)
+        .append("image")
+        .attr("href", galaxySpiralImage)
+        .attr("width", width)
+        .attr("height", height)
+        .attr("opacity", photoOpacity);
+
+      svg.append("rect")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("fill", "url(#photo-pattern)")
+        .style("pointer-events", "none");
+    }
 
     // Create zoom behavior
     const zoom = d3.zoom<SVGSVGElement, unknown>()
@@ -166,35 +192,70 @@ const GeometryViewer = () => {
       .style("stroke", "hsl(var(--accent-glow))")
       .style("stroke-width", 2);
 
-  }, [viewMode, circleData, selectedCircle]);
+  }, [viewMode, circleData, selectedCircle, showPhoto, photoOpacity]);
 
   return (
     <Card className="p-6 glass-morphism">
-      <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h3 className="text-2xl font-bold mb-2">Interactive Geometry Viewer</h3>
-          <p className="text-muted-foreground">
-            {circleData.length} precisely positioned circles • Zoom: {zoomLevel.toFixed(1)}x
-          </p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-2xl font-bold mb-2">Interactive Geometry Viewer</h3>
+            <p className="text-muted-foreground">
+              {circleData.length} precisely positioned circles • Zoom: {zoomLevel.toFixed(1)}x
+              {showPhoto && " • Photo overlay active"}
+            </p>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === "wheat" ? "default" : "outline"}
+                onClick={() => setViewMode("wheat")}
+                className={viewMode === "wheat" ? "glow-hover" : ""}
+              >
+                Wheat View
+              </Button>
+              <Button
+                variant={viewMode === "array" ? "default" : "outline"}
+                onClick={() => setViewMode("array")}
+                className={viewMode === "array" ? "glow-hover" : ""}
+              >
+                Array View
+              </Button>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <Switch
+                id="photo-overlay"
+                checked={showPhoto}
+                onCheckedChange={setShowPhoto}
+              />
+              <Label htmlFor="photo-overlay" className="text-sm font-medium">
+                Photo Overlay
+              </Label>
+            </div>
+            
+            {showPhoto && (
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="opacity-slider" className="text-xs">
+                  Opacity:
+                </Label>
+                <input
+                  id="opacity-slider"
+                  type="range"
+                  min="0.3"
+                  max="1"
+                  step="0.1"
+                  value={photoOpacity}
+                  onChange={(e) => setPhotoOpacity(parseFloat(e.target.value))}
+                  className="w-20 accent-primary"
+                />
+                <span className="text-xs text-muted-foreground">
+                  {Math.round(photoOpacity * 100)}%
+                </span>
+              </div>
+            )}
+          </div>
         </div>
-        
-        <div className="flex gap-3">
-          <Button
-            variant={viewMode === "wheat" ? "default" : "outline"}
-            onClick={() => setViewMode("wheat")}
-            className={viewMode === "wheat" ? "glow-hover" : ""}
-          >
-            Wheat View
-          </Button>
-          <Button
-            variant={viewMode === "array" ? "default" : "outline"}
-            onClick={() => setViewMode("array")}
-            className={viewMode === "array" ? "glow-hover" : ""}
-          >
-            Array View
-          </Button>
-        </div>
-      </div>
 
       <div className="relative bg-background/50 rounded-lg border border-card-border overflow-hidden">
         <svg ref={svgRef} className="w-full h-auto" />

@@ -114,15 +114,23 @@ const ChatBot = () => {
       if (selectedImage) {
         // Multimodal request with image
         const imagePart = base64ToGenerativePart(selectedImage, "image/jpeg");
-        const prompt = inputText || "Analyze this image in the context of crop circles, mathematics, physics, or array patterns. What do you see?";
+        const prompt = inputText || "Analyze this image in the context of crop circles, mathematics, physics, or array patterns. What geometric patterns, symmetries, or mathematical relationships do you observe? Compare to the famous 2001 Milk Hill formation with its 409 circles if relevant.";
         result = await model.generateContent([prompt, imagePart]);
       } else {
         // Text-only request with crop circle context
-        const contextPrompt = `You are an AI assistant for "Milk Hill Math: The Crop Circle Array" - a site exploring the intersection of crop circles, phased array physics, acoustics, and plasma science. 
+        const contextPrompt = `You are an AI assistant for "Milk Hill Math: The Crop Circle Array" - a site exploring the intersection of crop circles, phased array physics, acoustics, and plasma science. The site features authentic photographs of the famous 2001 Milk Hill crop circle formation, including the 409-circle "Galaxy Spiral" formation discovered on August 13, 2001.
+
+        Key facts about the Milk Hill formation:
+        - 409 individual circles arranged in a complex spiral pattern
+        - Discovered August 13, 2001, in Wiltshire, England
+        - Approximately 1000ft (300m) in diameter
+        - One of the largest and most complex crop formations ever documented
+        - Created overnight during heavy rainfall with no visible tracks
+        - Authentic photographs courtesy of Steve Alexander/Temporary Temples
 
         The user is asking: ${inputText}
         
-        Please provide helpful information about crop circles, mathematics, physics, array theory, or related scientific concepts. Be engaging and educational while maintaining the cosmic/mysterious theme of the site.`;
+        Please provide helpful information about crop circles, mathematics, physics, array theory, or related scientific concepts. Reference the authentic Milk Hill documentation when relevant. Be engaging and educational while maintaining the cosmic/mysterious theme of the site.`;
         
         result = await model.generateContent(contextPrompt);
       }
@@ -183,7 +191,7 @@ const ChatBot = () => {
                 <div className="w-10 h-10 rounded-full bg-gradient-aurora animate-stellar-rotate" />
                 <div>
                   <h3 className="font-bold text-lg cosmic-text">Cosmic AI Assistant</h3>
-                  <p className="text-sm text-muted-foreground">Powered by Gemini • Multimodal</p>
+                  <p className="text-sm text-muted-foreground">Expert in authentic Milk Hill documentation & physics</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
