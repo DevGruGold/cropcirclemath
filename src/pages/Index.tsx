@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
 import { GeometryViewer } from "@/components/GeometryViewer";
 import { PhasedArraySimulator } from "@/components/PhasedArraySimulator";
+import { ChatBot } from "@/components/ChatBot";
+import { ApiKeyHelp } from "@/components/ApiKeyHelp";
 import heroImage from "@/assets/milk-hill-hero.jpg";
 
 const Index = () => {
@@ -87,6 +89,22 @@ const Index = () => {
         </div>
       </section>
 
+      {/* AI Assistant Section */}
+      <section id="about" className="py-20 px-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 cosmic-text">
+              Ask the Cosmic AI
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Powered by Google Gemini • Multimodal • Expert in crop circles and physics
+            </p>
+          </div>
+          
+          <ApiKeyHelp />
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 px-6 border-t border-border/50">
         <div className="max-w-6xl mx-auto text-center">
@@ -95,6 +113,9 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      {/* AI Chatbot */}
+      <ChatBot />
     </div>
   );
 };

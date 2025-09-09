@@ -1,6 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Navigation } from "@/components/Navigation";
+import { ChatBot } from "@/components/ChatBot";
 import { InlineMath, BlockMath } from "react-katex";
 import { useState } from "react";
 
@@ -268,6 +269,9 @@ const Mathematics = () => {
           )}
         </div>
       </main>
+
+      {/* AI Chatbot */}
+      <ChatBot />
     </div>
   );
 };
