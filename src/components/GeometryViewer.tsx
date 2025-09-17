@@ -70,8 +70,8 @@ const GeometryViewer = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 800;
-    const height = 600;
+    const width = 1200;
+    const height = 800;
     
     svg
       .attr("width", width)

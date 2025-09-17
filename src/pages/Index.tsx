@@ -14,43 +14,48 @@ const Index = () => {
       <Navigation />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/40 to-background/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background/95" />
         </div>
         
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
-          <h1 className="text-6xl md:text-8xl font-bold mb-6 cosmic-text">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center mb-8">
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 cosmic-text">
             Milk Hill Math
           </h1>
-          <h2 className="text-2xl md:text-4xl font-light mb-8 text-secondary">
+          <h2 className="text-xl md:text-3xl font-light mb-6 text-secondary">
             The Crop Circle Array
           </h2>
-          <p className="text-xl md:text-2xl mb-12 text-muted-foreground max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl mb-8 text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Explore how the famous 2001 Milk Hill crop circle reveals the hidden mathematics of phased arrays, 
             acoustic beamforming, and cosmic engineering principles.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Button 
               size="lg" 
-              className="bg-primary text-primary-foreground hover:bg-primary-glow glow-hover px-8 py-4 text-lg"
-              onClick={() => document.getElementById('geometry')?.scrollIntoView({ behavior: 'smooth' })}
+              className="bg-primary text-primary-foreground hover:bg-primary-glow glow-hover px-6 py-3 text-base"
+              onClick={() => document.getElementById('physics')?.scrollIntoView({ behavior: 'smooth' })}
             >
               Explore the Array
             </Button>
             <Button 
               variant="outline" 
               size="lg"
-              className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground glow-secondary px-8 py-4 text-lg"
+              className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground glow-secondary px-6 py-3 text-base"
               onClick={() => window.location.href = '/mathematics'}
             >
               Learn the Physics
             </Button>
           </div>
+        </div>
+
+        {/* Interactive Geometry Viewer */}
+        <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+          <GeometryViewer />
         </div>
         
         {/* Floating elements */}
@@ -155,21 +160,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Interactive Geometry Section */}
-      <section id="geometry" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 cosmic-text">
-              The Sacred Geometry
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Discover the 409 precisely positioned circles that form nature's most sophisticated array antenna
-            </p>
-          </div>
-          
-          <GeometryViewer />
-        </div>
-      </section>
 
       {/* Phased Array Section */}
       <section id="physics" className="py-20 px-6 bg-muted/20">
