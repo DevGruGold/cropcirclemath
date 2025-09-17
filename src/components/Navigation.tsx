@@ -7,11 +7,18 @@ const Navigation = () => {
 
   const navItems = [
     { id: "home", label: "Home", path: "/" },
-    { id: "geometry", label: "Geometry", path: "/#geometry" },
-    { id: "physics", label: "Physics", path: "/#physics" },
+    { id: "array-viewer", label: "Array Explorer", path: "/#array-viewer" },
+    { id: "physics", label: "Beam Steering", path: "/#physics" },
     { id: "mathematics", label: "Mathematics", path: "/mathematics" },
-    { id: "about", label: "About", path: "/#about" }
+    { id: "about", label: "AI Assistant", path: "/#about" }
   ];
+
+  const handleScrollTo = (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const isActive = (path: string) => {
     if (path.startsWith("/#")) {
@@ -31,28 +38,50 @@ const Navigation = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.id}
-                to={item.path}
-                className={`
-                  px-4 py-2 rounded-lg transition-all duration-300 font-medium
-                  ${isActive(item.path)
-                    ? 'text-primary bg-primary/10 glow-hover' 
-                    : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
-                  }
-                `}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center space-x-6">
+            {navItems.map((item) => {
+              if (item.path.startsWith("/#")) {
+                const sectionId = item.path.substring(2);
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleScrollTo(sectionId)}
+                    className={`
+                      px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm
+                      ${location.pathname === "/" && location.hash === `#${sectionId}`
+                        ? 'text-primary bg-primary/10 glow-hover' 
+                        : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
+                      }
+                    `}
+                  >
+                    {item.label}
+                  </button>
+                );
+              }
+              return (
+                <Link
+                  key={item.id}
+                  to={item.path}
+                  className={`
+                    px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm
+                    ${isActive(item.path)
+                      ? 'text-primary bg-primary/10 glow-hover' 
+                      : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
+                    }
+                  `}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* CTA Button */}
           <Button 
             variant="outline"
-            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground glow-hover"
+            size="sm"
+            onClick={() => handleScrollTo('array-viewer')}
+            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground glow-hover touch-manipulation"
           >
             Explore Array
           </Button>
