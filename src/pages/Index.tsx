@@ -59,14 +59,14 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Interactive Array Explorer - More captivating */}
+          {/* Interactive Phased Array Simulator - Hero Feature */}
           <div id="array-viewer" className="flex-1 px-2 md:px-6 pb-4 md:pb-8">
             <div className="bg-card/50 backdrop-blur-md rounded-lg border border-border/50 p-3 md:p-6">
               <div className="text-center mb-4">
-                <h3 className="text-lg md:text-2xl font-bold cosmic-text mb-2">Interactive Array Configurations</h3>
-                <p className="text-xs md:text-sm text-muted-foreground">Explore different crop circle array patterns and their beam steering capabilities</p>
+                <h3 className="text-lg md:text-2xl font-bold cosmic-text mb-2">Interactive Beam Steering</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">Control phased array beamforming in real-time</p>
               </div>
-              <ArrayExplorer />
+              <PhasedArraySimulator />
             </div>
           </div>
         </div>
@@ -77,19 +77,19 @@ const Index = () => {
         <div className="hidden md:block absolute top-1/2 left-2 lg:left-10 w-6 lg:w-8 h-6 lg:h-8 rounded-full bg-accent/25 animate-float-glow" style={{ animationDelay: '2s' }} />
       </section>
 
-      {/* Phased Array Physics - Moved up for immediate engagement */}
-      <section id="beam-steering" className="py-12 md:py-20 px-4 md:px-6 bg-muted/10">
+      {/* Array Configuration Explorer */}
+      <section id="array-explorer" className="py-12 md:py-20 px-4 md:px-6 bg-muted/10">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8 md:mb-16">
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 cosmic-text">
-              Interactive Beam Steering
+              Array Configurations
             </h2>
             <p className="text-base md:text-xl text-muted-foreground max-w-3xl mx-auto px-2">
-              Touch and drag to control phased array beamforming in real-time
+              Explore different crop circle array patterns and their beam steering capabilities
             </p>
           </div>
           
-          <PhasedArraySimulator />
+          <ArrayExplorer />
         </div>
       </section>
 
