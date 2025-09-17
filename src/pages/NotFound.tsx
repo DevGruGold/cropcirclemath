@@ -1,4 +1,5 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 
 const NotFound = () => {
@@ -20,12 +21,14 @@ const NotFound = () => {
         </div>
         
         <div className="space-y-4">
-          <a 
-            href="/" 
-            className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary-glow glow-hover transition-all"
-          >
-            Return to Home Array
-          </a>
+          <Link to="/">
+            <Button 
+              size="lg"
+              className="bg-primary text-primary-foreground hover:bg-primary-glow glow-hover transition-all"
+            >
+              Return to Home Array
+            </Button>
+          </Link>
           
           <p className="text-sm text-muted-foreground">
             Route accessed: <code className="bg-muted px-2 py-1 rounded text-xs font-mono">{location.pathname}</code>

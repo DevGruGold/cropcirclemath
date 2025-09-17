@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { GeometryViewer } from "@/components/GeometryViewer";
 import { PhasedArraySimulator } from "@/components/PhasedArraySimulator";
@@ -46,14 +47,15 @@ const Index = () => {
               >
                 Explore Interactive Array
               </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground glow-secondary px-6 py-4 text-base min-h-[48px] touch-manipulation"
-                onClick={() => document.getElementById('physics')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                Try Beam Steering
-              </Button>
+              <Link to="/mathematics">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground glow-secondary px-6 py-4 text-base min-h-[44px] touch-manipulation w-full"
+                >
+                  Learn the Physics
+                </Button>
+              </Link>
             </div>
           </div>
 
