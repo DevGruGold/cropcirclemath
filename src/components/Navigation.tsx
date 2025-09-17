@@ -8,12 +8,18 @@ const Navigation = () => {
   const navItems = [
     { id: "home", label: "Home", path: "/" },
     { id: "array-viewer", label: "Array Explorer", path: "/#array-viewer" },
-    { id: "physics", label: "Beam Steering", path: "/#physics" },
+    { id: "beam-steering", label: "Beam Steering", path: "/#beam-steering" },
     { id: "mathematics", label: "Mathematics", path: "/mathematics" },
     { id: "about", label: "AI Assistant", path: "/#about" }
   ];
 
   const handleScrollTo = (elementId: string) => {
+    // If we're not on the home page, navigate to home first, then scroll
+    if (location.pathname !== "/") {
+      window.location.href = `/#${elementId}`;
+      return;
+    }
+    
     const element = document.getElementById(elementId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
