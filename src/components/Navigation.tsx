@@ -14,30 +14,8 @@ const Navigation = () => {
     { id: "mathematics", label: "Mathematics", path: "/mathematics" },
   ];
 
-  const handleScrollTo = (elementId: string) => {
-    // If we're not on the home page, navigate to home first, then scroll
-    if (location.pathname !== "/") {
-      navigate("/");
-      // Use setTimeout to allow the navigation to complete before scrolling
-      setTimeout(() => {
-        const element = document.getElementById(elementId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
-      return;
-    }
-    
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
 
   const isActive = (path: string) => {
-    if (path.startsWith("/#")) {
-      return location.pathname === "/" && location.hash === path.substring(1);
-    }
     return location.pathname === path;
   };
 
