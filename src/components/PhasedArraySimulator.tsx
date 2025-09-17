@@ -16,8 +16,8 @@ const PhasedArraySimulator = () => {
   const [frequency, setFrequency] = useState(1.0);
   const [steeringAngle, setSteeringAngle] = useState(0);
   const [showEquations, setShowEquations] = useState(false);
-  const polarRef = useRef<SVGSVGElement>(null);
-  const heatmapRef = useRef<SVGSVGElement>(null);
+  const polarSvgRef = useRef<SVGSVGElement>(null);
+  const heatmapSvgRef = useRef<SVGSVGElement>(null);
 
   // Generate array elements based on Milk Hill pattern (simplified)
   const generateArrayElements = (): ArrayElement[] => {
@@ -71,16 +71,20 @@ const PhasedArraySimulator = () => {
     return Math.sqrt(sumReal * sumReal + sumImag * sumImag);
   };
 
-  // Draw polar plot
+  // Draw polar plot - responsive
   useEffect(() => {
-    if (!polarRef.current) return;
+    if (!polarSvgRef.current) return;
 
-    const svg = d3.select(polarRef.current);
+    const svg = d3.select(polarSvgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 400;
-    const height = 400;
-    const radius = 180;
+    // Responsive sizing
+    const container = polarSvgRef.current.parentElement;
+    const containerRect = container?.getBoundingClientRect();
+    const size = Math.min(containerRect?.width || 320, 400);
+    const width = size;
+    const height = size;
+    const radius = size * 0.4;
     const centerX = width / 2;
     const centerY = height / 2;
 
@@ -146,6 +150,7 @@ const PhasedArraySimulator = () => {
       .attr("y", 20)
       .attr("text-anchor", "middle")
       .attr("fill", "hsl(var(--foreground))")
+      .attr("font-size", Math.max(10, size / 32))
       .text("0°");
     
     svg.append("text")
@@ -153,22 +158,28 @@ const PhasedArraySimulator = () => {
       .attr("y", centerY + 5)
       .attr("text-anchor", "middle")
       .attr("fill", "hsl(var(--foreground))")
+      .attr("font-size", Math.max(10, size / 32))
       .text("90°");
 
   }, [frequency, steeringAngle, arrayElements]);
 
-  // Draw 2D heatmap
+  // Draw 2D heatmap - responsive
   useEffect(() => {
-    if (!heatmapRef.current) return;
+    if (!heatmapSvgRef.current) return;
 
-    const svg = d3.select(heatmapRef.current);
+    const svg = d3.select(heatmapSvgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 400;
-    const height = 300;
+    // Responsive sizing
+    const container = heatmapSvgRef.current.parentElement;
+    const containerRect = container?.getBoundingClientRect();
+    const maxSize = Math.min(containerRect?.width || 320, 400);
+    const width = maxSize;
+    const height = maxSize * 0.75; // 4:3 aspect ratio
+    
     svg.attr("width", width).attr("height", height);
 
-    const resolution = 40;
+    const resolution = Math.max(20, Math.min(40, width / 10)); // Adaptive resolution
     const data: number[][] = [];
 
     // Calculate intensity at each point
@@ -206,103 +217,110 @@ const PhasedArraySimulator = () => {
   }, [frequency, steeringAngle, arrayElements]);
 
   return (
-    <div className="space-y-6">
-      <Card className="p-6 glass-morphism">
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold mb-2">Phased Array Beam Simulator</h3>
-          <p className="text-muted-foreground">
-            Adjust parameters to see how the Milk Hill geometry creates directional beams
-          </p>
-        </div>
+    <div className="w-full bg-card/50 backdrop-blur-md rounded-lg border border-border/50 p-3 md:p-6">
+      <div className="text-center mb-6 md:mb-8">
+        <h3 className="text-xl md:text-2xl font-bold cosmic-text mb-2">Phased Array Beam Pattern</h3>
+        <p className="text-sm md:text-base text-muted-foreground px-2">
+          Touch the sliders to steer the beam and see real-time physics simulation
+        </p>
+      </div>
 
-        {/* Controls */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">
+      {/* Mobile-first layout: controls at top, visuals below */}
+      <div className="space-y-6 md:space-y-8">
+        {/* Touch-optimized controls */}
+        <div className="space-y-4 md:space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground block">
                 Frequency: {frequency.toFixed(1)} GHz
               </label>
-              <Slider
-                value={[frequency]}
-                onValueChange={([value]) => setFrequency(value)}
-                min={0.1}
-                max={5.0}
-                step={0.1}
-                className="w-full"
+              <input
+                type="range"
+                min="1"
+                max="10"
+                step="0.1"
+                value={frequency}
+                onChange={(e) => setFrequency(parseFloat(e.target.value))}
+                className="w-full h-6 md:h-4 accent-primary touch-manipulation cursor-pointer"
+                style={{ WebkitAppearance: 'none' }}
               />
             </div>
             
-            <div>
-              <label className="block text-sm font-medium mb-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground block">
                 Steering Angle: {steeringAngle}°
               </label>
-              <Slider
-                value={[steeringAngle]}
-                onValueChange={([value]) => setSteeringAngle(value)}
-                min={-90}
-                max={90}
-                step={5}
-                className="w-full"
+              <input
+                type="range"
+                min="-60"
+                max="60"
+                step="5"
+                value={steeringAngle}
+                onChange={(e) => setSteeringAngle(parseInt(e.target.value))}
+                className="w-full h-6 md:h-4 accent-primary touch-manipulation cursor-pointer"
+                style={{ WebkitAppearance: 'none' }}
               />
             </div>
           </div>
-          
-          <div className="space-y-4">
-            <Button
-              variant="outline"
-              onClick={() => setShowEquations(!showEquations)}
-              className="w-full"
-            >
-              {showEquations ? "Hide" : "Show"} Equations
-            </Button>
-            
-            <div className="text-sm text-muted-foreground space-y-2">
-              <p><strong>Elements:</strong> {arrayElements.length} array elements</p>
-              <p><strong>Pattern:</strong> Concentric rings (Milk Hill inspired)</p>
-              <p><strong>Analogy:</strong> Like HAARP steering ionospheric beams</p>
-            </div>
-          </div>
-        </div>
 
-        {/* Equations Panel */}
-        {showEquations && (
-          <Card className="p-4 mb-6 bg-muted/30 border-accent/50">
-            <h4 className="font-semibold mb-3">Array Factor Mathematics</h4>
-            <div className="space-y-3 text-sm">
-              <div>
-                <p className="mb-1">Array Factor:</p>
-                <BlockMath math="AF(\theta, \phi) = \sum_{n=1}^{N} A_n e^{jk(x_n \sin\theta \cos\phi + y_n \sin\theta \sin\phi + \delta_n)}" />
-              </div>
-              <div>
-                <p className="mb-1">Where:</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <div><InlineMath math="A_n" /> = element amplitude</div>
-                  <div><InlineMath math="k = 2\pi f/c" /> = wave number</div>
-                  <div><InlineMath math="(x_n, y_n)" /> = element position</div>
-                  <div><InlineMath math="\delta_n" /> = phase delay</div>
+          <Button
+            onClick={() => setShowEquations(!showEquations)}
+            variant="outline"
+            className="w-full md:w-auto glow-hover min-h-[48px] touch-manipulation"
+          >
+            {showEquations ? 'Hide' : 'Show'} Mathematical Formulas
+          </Button>
+
+          {showEquations && (
+            <Card className="p-3 md:p-4 glass-morphism">
+              <h4 className="font-bold text-primary mb-3 text-sm md:text-base">Array Factor Equation</h4>
+              <div className="space-y-3 text-xs md:text-sm">
+                <div className="overflow-x-auto">
+                  <BlockMath>
+                    {`AF(\\theta) = \\sum_{n=0}^{N-1} a_n e^{jk(x_n \\sin\\theta + \\phi_n)}`}
+                  </BlockMath>
                 </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Where <InlineMath>k = 2\\pi f / c</InlineMath> is the wavenumber, 
+                  <InlineMath>x_n</InlineMath> are element positions, and 
+                  <InlineMath>\\phi_n</InlineMath> are progressive phase shifts for beam steering.
+                </p>
               </div>
-            </div>
-          </Card>
-        )}
+            </Card>
+          )}
+        </div>
 
-        {/* Visualizations */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="text-center">
-            <h4 className="font-semibold mb-3">Polar Beam Pattern</h4>
-            <div className="bg-background/50 rounded-lg border border-card-border p-4">
-              <svg ref={polarRef} className="w-full h-auto" />
+        {/* Responsive visualizations - stack on mobile, side-by-side on larger screens */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+          <div>
+            <h4 className="text-base md:text-lg font-semibold mb-3 text-center cosmic-text">Polar Beam Pattern</h4>
+            <div className="bg-background/30 rounded-lg border border-border/30 p-2 md:p-4">
+              <svg 
+                ref={polarSvgRef} 
+                className="w-full bg-gradient-to-br from-background to-muted/20 touch-manipulation select-none" 
+                style={{ 
+                  height: 'clamp(250px, 40vh, 320px)',
+                  WebkitUserSelect: 'none'
+                }}
+              />
             </div>
           </div>
-          
-          <div className="text-center">
-            <h4 className="font-semibold mb-3">2D Intensity Heatmap</h4>
-            <div className="bg-background/50 rounded-lg border border-card-border p-4">
-              <svg ref={heatmapRef} className="w-full h-auto" />
+
+          <div>
+            <h4 className="text-base md:text-lg font-semibold mb-3 text-center cosmic-text">2D Intensity Heatmap</h4>
+            <div className="bg-background/30 rounded-lg border border-border/30 p-2 md:p-4">
+              <svg 
+                ref={heatmapSvgRef} 
+                className="w-full bg-gradient-to-br from-background to-muted/20 touch-manipulation select-none" 
+                style={{ 
+                  height: 'clamp(250px, 40vh, 320px)',
+                  WebkitUserSelect: 'none'
+                }}
+              />
             </div>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

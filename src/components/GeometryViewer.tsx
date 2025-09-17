@@ -56,9 +56,9 @@ const generateMilkHillData = () => {
 
 const GeometryViewer = () => {
   const svgRef = useRef<SVGSVGElement>(null);
-  const [viewMode, setViewMode] = useState<"wheat" | "array">("wheat");
+  const [viewMode, setViewMode] = useState<"array" | "mathematical" | "artistic">("array");
   const [zoomLevel, setZoomLevel] = useState(1);
-  const [selectedCircle, setSelectedCircle] = useState<number | null>(null);
+  const [selectedCircle, setSelectedCircle] = useState<any | null>(null);
   const [showPhoto, setShowPhoto] = useState(false);
   const [photoOpacity, setPhotoOpacity] = useState(0.7);
 
@@ -70,81 +70,66 @@ const GeometryViewer = () => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const width = 1200;
-    const height = 800;
+    // Get container dimensions for responsive design
+    const container = svgRef.current.parentElement;
+    const containerRect = container?.getBoundingClientRect();
+    const width = containerRect?.width || 800;
+    const height = Math.min(window.innerHeight * 0.6, width * 0.75); // Mobile-friendly aspect ratio
     
     svg
       .attr("width", width)
       .attr("height", height)
       .attr("viewBox", `0 0 ${width} ${height}`);
 
-    // Add background image if enabled
-    if (showPhoto) {
-      svg.append("defs")
-        .append("pattern")
-        .attr("id", "photo-pattern")
-        .attr("patternUnits", "userSpaceOnUse")
-        .attr("width", width)
-        .attr("height", height)
-        .append("image")
-        .attr("href", galaxySpiralImage)
-        .attr("width", width)
-        .attr("height", height)
-        .attr("opacity", photoOpacity);
-
-      svg.append("rect")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("fill", "url(#photo-pattern)")
-        .style("pointer-events", "none");
-    }
-
-    // Create zoom behavior
+    // Create zoom behavior with mobile-friendly settings
     const zoom = d3.zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.1, 10])
+      .scaleExtent([0.5, 8])
       .on("zoom", (event) => {
-        container.attr("transform", event.transform);
+        g.attr("transform", event.transform);
         setZoomLevel(event.transform.k);
       });
 
     svg.call(zoom);
 
-    const container = svg.append("g");
+    const g = svg.append("g");
 
     // Create scales
     const xExtent = d3.extent(circleData, d => d.x) as [number, number];
     const yExtent = d3.extent(circleData, d => d.y) as [number, number];
     
+    const padding = Math.min(width, height) * 0.1;
+    
     const xScale = d3.scaleLinear()
       .domain(xExtent)
-      .range([100, width - 100]);
+      .range([padding, width - padding]);
     
     const yScale = d3.scaleLinear()
       .domain(yExtent)
-      .range([100, height - 100]);
+      .range([padding, height - padding]);
 
     // Add background grid for array mode
     if (viewMode === "array") {
-      const gridLines = container.append("g").attr("class", "grid");
+      const gridLines = g.append("g").attr("class", "grid");
+      const gridSpacing = Math.min(width, height) / 15; // Responsive grid spacing
       
       // Vertical lines
-      for (let x = 100; x <= width - 100; x += 50) {
+      for (let x = padding; x <= width - padding; x += gridSpacing) {
         gridLines.append("line")
           .attr("x1", x)
-          .attr("y1", 100)
+          .attr("y1", padding)
           .attr("x2", x)
-          .attr("y2", height - 100)
+          .attr("y2", height - padding)
           .attr("stroke", "hsl(var(--border))")
           .attr("stroke-width", 0.5)
           .attr("opacity", 0.3);
       }
       
       // Horizontal lines
-      for (let y = 100; y <= height - 100; y += 50) {
+      for (let y = padding; y <= height - padding; y += gridSpacing) {
         gridLines.append("line")
-          .attr("x1", 100)
+          .attr("x1", padding)
           .attr("y1", y)
-          .attr("x2", width - 100)
+          .attr("x2", width - padding)
           .attr("y2", y)
           .attr("stroke", "hsl(var(--border))")
           .attr("stroke-width", 0.5)
@@ -152,130 +137,165 @@ const GeometryViewer = () => {
       }
     }
 
-    // Draw circles
-    container.selectAll(".circle")
+    // Draw circles with responsive sizing
+    const minRadius = Math.max(2, Math.min(width, height) / 200);
+    
+    g.selectAll(".circle")
       .data(circleData)
       .enter()
       .append("circle")
       .attr("class", "circle crop-circle")
       .attr("cx", d => xScale(d.x))
       .attr("cy", d => yScale(d.y))
-      .attr("r", d => viewMode === "wheat" ? d.radius : Math.max(3, d.radius * 0.5))
-      .style("fill", viewMode === "wheat" ? "hsl(var(--secondary))" : "hsl(var(--primary))")
-      .style("stroke", viewMode === "wheat" ? "hsl(var(--secondary-glow))" : "hsl(var(--primary-glow))")
-      .style("stroke-width", viewMode === "wheat" ? 2 : 1)
+      .attr("r", d => {
+        const baseRadius = viewMode === "artistic" ? d.radius : Math.max(minRadius, d.radius * 0.6);
+        return Math.min(baseRadius, minRadius * 4); // Cap max size for mobile
+      })
+      .style("fill", () => {
+        switch(viewMode) {
+          case "array": return "hsl(var(--primary))";
+          case "mathematical": return "hsl(var(--accent))";
+          case "artistic": return "hsl(var(--secondary))";
+          default: return "hsl(var(--primary))";
+        }
+      })
+      .style("stroke", () => {
+        switch(viewMode) {
+          case "array": return "hsl(var(--primary-glow))";
+          case "mathematical": return "hsl(var(--accent-glow))";
+          case "artistic": return "hsl(var(--secondary-glow))";
+          default: return "hsl(var(--primary-glow))";
+        }
+      })
+      .style("stroke-width", 1)
       .style("opacity", 0.8)
-      .on("mouseover", function(event, d) {
+      .on("click touchstart", function(event, d) {
+        event.preventDefault();
+        setSelectedCircle(d);
         d3.select(this)
           .style("fill", "hsl(var(--accent))")
           .style("stroke", "hsl(var(--accent-glow))")
-          .style("stroke-width", 3);
-      })
-      .on("mouseout", function(event, d) {
-        if (selectedCircle !== d.id) {
-          d3.select(this)
-            .style("fill", viewMode === "wheat" ? "hsl(var(--secondary))" : "hsl(var(--primary))")
-            .style("stroke", viewMode === "wheat" ? "hsl(var(--secondary-glow))" : "hsl(var(--primary-glow))")
-            .style("stroke-width", viewMode === "wheat" ? 2 : 1);
-        }
-      })
-      .on("click", function(event, d) {
-        setSelectedCircle(d.id);
+          .style("stroke-width", 2);
       });
 
     // Add center point indicator
-    container.append("circle")
+    g.append("circle")
       .attr("cx", xScale(0))
       .attr("cy", yScale(0))
-      .attr("r", 3)
+      .attr("r", minRadius * 1.5)
       .style("fill", "hsl(var(--accent))")
       .style("stroke", "hsl(var(--accent-glow))")
       .style("stroke-width", 2);
 
+    // Handle window resize
+    const handleResize = () => {
+      const newContainer = svgRef.current?.parentElement;
+      const newRect = newContainer?.getBoundingClientRect();
+      if (newRect) {
+        svg.attr("width", newRect.width);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+
   }, [viewMode, circleData, selectedCircle, showPhoto, photoOpacity]);
 
   return (
-    <Card className="p-6 glass-morphism">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h3 className="text-2xl font-bold mb-2">Interactive Geometry Viewer</h3>
-            <p className="text-muted-foreground">
-              {circleData.length} precisely positioned circles • Zoom: {zoomLevel.toFixed(1)}x
-              {showPhoto && " • Photo overlay active"}
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-            <div className="flex gap-2">
-              <Button
-                variant={viewMode === "wheat" ? "default" : "outline"}
-                onClick={() => setViewMode("wheat")}
-                className={viewMode === "wheat" ? "glow-hover" : ""}
-              >
-                Wheat View
-              </Button>
-              <Button
-                variant={viewMode === "array" ? "default" : "outline"}
-                onClick={() => setViewMode("array")}
-                className={viewMode === "array" ? "glow-hover" : ""}
-              >
-                Array View
-              </Button>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="photo-overlay"
-                checked={showPhoto}
-                onCheckedChange={setShowPhoto}
-              />
-              <Label htmlFor="photo-overlay" className="text-sm font-medium">
-                Photo Overlay
-              </Label>
-            </div>
-            
-            {showPhoto && (
-              <div className="flex items-center space-x-2">
-                <Label htmlFor="opacity-slider" className="text-xs">
-                  Opacity:
-                </Label>
-                <input
-                  id="opacity-slider"
-                  type="range"
-                  min="0.3"
-                  max="1"
-                  step="0.1"
-                  value={photoOpacity}
-                  onChange={(e) => setPhotoOpacity(parseFloat(e.target.value))}
-                  className="w-20 accent-primary"
-                />
-                <span className="text-xs text-muted-foreground">
-                  {Math.round(photoOpacity * 100)}%
-                </span>
-              </div>
-            )}
-          </div>
+    <div className="w-full bg-card/50 backdrop-blur-md rounded-lg border border-border/50 p-3 md:p-6">
+      {/* Mobile-optimized header */}
+      <div className="flex flex-col gap-3 mb-4 md:mb-6">
+        <div className="text-center md:text-left">
+          <h3 className="text-lg md:text-2xl font-bold cosmic-text">Interactive Array Explorer</h3>
+          <p className="text-xs md:text-sm text-muted-foreground">409 circles • Touch to explore • Pinch to zoom</p>
         </div>
-
-      <div className="relative bg-background/50 rounded-lg border border-card-border overflow-hidden">
-        <svg ref={svgRef} className="w-full h-auto" />
         
-        <div className="absolute bottom-4 left-4 text-sm text-muted-foreground">
-          Click and drag to pan • Scroll to zoom • Hover circles for details
+        {/* Touch-friendly mode switcher */}
+        <div className="flex gap-1 md:gap-2 overflow-x-auto">
+          <Button
+            variant={viewMode === 'array' ? 'default' : 'outline'}
+            onClick={() => setViewMode('array')}
+            className="glow-hover text-xs md:text-sm px-3 md:px-4 py-2 min-h-[44px] flex-shrink-0 touch-manipulation"
+          >
+            Array View
+          </Button>
+          <Button
+            variant={viewMode === 'mathematical' ? 'default' : 'outline'}
+            onClick={() => setViewMode('mathematical')}
+            className="glow-hover text-xs md:text-sm px-3 md:px-4 py-2 min-h-[44px] flex-shrink-0 touch-manipulation"
+          >
+            Mathematical
+          </Button>
+          <Button
+            variant={viewMode === 'artistic' ? 'default' : 'outline'}
+            onClick={() => setViewMode('artistic')}
+            className="glow-hover text-xs md:text-sm px-3 md:px-4 py-2 min-h-[44px] flex-shrink-0 touch-manipulation"
+          >
+            Artistic
+          </Button>
         </div>
       </div>
 
-      {selectedCircle !== null && (
-        <div className="mt-4 p-4 bg-card/50 rounded-lg border border-card-border">
-          <h4 className="font-semibold mb-2">Circle #{selectedCircle}</h4>
-          <p className="text-sm text-muted-foreground">
-            Position: ({circleData[selectedCircle]?.x.toFixed(1)}, {circleData[selectedCircle]?.y.toFixed(1)})
-            <br />
-            Radius: {circleData[selectedCircle]?.radius.toFixed(1)} units
-          </p>
+      {/* Responsive SVG container */}
+      <div className="relative bg-background/30 rounded-lg border border-border/30 overflow-hidden">
+        <svg 
+          ref={svgRef} 
+          className="w-full bg-gradient-to-br from-background to-muted/20 touch-manipulation select-none" 
+          style={{ 
+            height: 'clamp(300px, 60vh, 600px)',
+            WebkitUserSelect: 'none',
+            touchAction: 'pan-x pan-y'
+          }}
+        />
+        
+        {showPhoto && (
+          <img
+            src={galaxySpiralImage}
+            alt="Milk Hill Crop Circle"
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300"
+            style={{ opacity: photoOpacity }}
+          />
+        )}
+      </div>
+
+      {/* Mobile-optimized controls */}
+      <div className="flex flex-col gap-2 md:gap-4 mt-3 md:mt-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowPhoto(!showPhoto)}
+            className="glow-hover text-xs md:text-sm px-3 py-2 min-h-[44px] touch-manipulation"
+          >
+            {showPhoto ? 'Hide Photo' : 'Show Photo'}
+          </Button>
+          
+          {showPhoto && (
+            <div className="flex items-center gap-2">
+              <label className="text-xs md:text-sm text-muted-foreground">Opacity:</label>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.1"
+                value={photoOpacity}
+                onChange={(e) => setPhotoOpacity(parseFloat(e.target.value))}
+                className="w-16 md:w-20 h-6 accent-primary touch-manipulation"
+              />
+            </div>
+          )}
         </div>
-      )}
-    </Card>
+        
+        <div className="text-xs md:text-sm text-muted-foreground text-center md:text-left">
+          <div>Zoom: {Math.round(zoomLevel * 100)}% • Pan with touch/mouse</div>
+          {selectedCircle && (
+            <div className="mt-1">
+              Selected: Circle {selectedCircle.id} (radius: {selectedCircle.radius.toFixed(1)})
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
