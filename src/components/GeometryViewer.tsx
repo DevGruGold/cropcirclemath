@@ -93,19 +93,40 @@ const GeometryViewer = () => {
 
     const g = svg.append("g");
 
-    // Create scales
+    // Create scales with photo-aligned mapping
     const xExtent = d3.extent(circleData, d => d.x) as [number, number];
     const yExtent = d3.extent(circleData, d => d.y) as [number, number];
     
-    const padding = Math.min(width, height) * 0.1;
+    let padding = Math.min(width, height) * 0.1;
+    let xScale, yScale;
     
-    const xScale = d3.scaleLinear()
-      .domain(xExtent)
-      .range([padding, width - padding]);
-    
-    const yScale = d3.scaleLinear()
-      .domain(yExtent)
-      .range([padding, height - padding]);
+    if (showPhoto) {
+      // When photo is shown, map circles to match the actual crop circle position in the image
+      // The Milk Hill crop circle is roughly centered in the photo with some offset
+      const photoMargin = Math.min(width, height) * 0.15;
+      const cropCircleRadius = Math.min(width, height) * 0.35; // Approximate size of crop circle in photo
+      
+      // Center the crop circle slightly offset from image center to match photo
+      const photoCenterX = width * 0.48; // Slightly left of center
+      const photoCenterY = height * 0.52; // Slightly below center
+      
+      xScale = d3.scaleLinear()
+        .domain(xExtent)
+        .range([photoCenterX - cropCircleRadius, photoCenterX + cropCircleRadius]);
+      
+      yScale = d3.scaleLinear()
+        .domain(yExtent)
+        .range([photoCenterY - cropCircleRadius, photoCenterY + cropCircleRadius]);
+    } else {
+      // Normal scaling when no photo overlay
+      xScale = d3.scaleLinear()
+        .domain(xExtent)
+        .range([padding, width - padding]);
+      
+      yScale = d3.scaleLinear()
+        .domain(yExtent)
+        .range([padding, height - padding]);
+    }
 
     // Add background grid for array mode
     if (viewMode === "array") {
@@ -148,8 +169,14 @@ const GeometryViewer = () => {
       .attr("cx", d => xScale(d.x))
       .attr("cy", d => yScale(d.y))
       .attr("r", d => {
-        const baseRadius = viewMode === "artistic" ? d.radius : Math.max(minRadius, d.radius * 0.6);
-        return Math.min(baseRadius, minRadius * 4); // Cap max size for mobile
+        let baseRadius;
+        if (showPhoto) {
+          // Scale circles to match photo proportions
+          baseRadius = Math.max(minRadius * 0.3, d.radius * 0.15);
+        } else {
+          baseRadius = viewMode === "artistic" ? d.radius : Math.max(minRadius, d.radius * 0.6);
+        }
+        return Math.min(baseRadius, minRadius * 3);
       })
       .style("fill", () => {
         switch(viewMode) {
@@ -168,7 +195,7 @@ const GeometryViewer = () => {
         }
       })
       .style("stroke-width", 1)
-      .style("opacity", 0.8)
+      .style("opacity", showPhoto ? 0.9 : 0.8)
       .on("click touchstart", function(event, d) {
         event.preventDefault();
         setSelectedCircle(d);
@@ -182,10 +209,11 @@ const GeometryViewer = () => {
     g.append("circle")
       .attr("cx", xScale(0))
       .attr("cy", yScale(0))
-      .attr("r", minRadius * 1.5)
+      .attr("r", showPhoto ? minRadius : minRadius * 1.5)
       .style("fill", "hsl(var(--accent))")
       .style("stroke", "hsl(var(--accent-glow))")
-      .style("stroke-width", 2);
+      .style("stroke-width", showPhoto ? 1 : 2)
+      .style("opacity", showPhoto ? 0.8 : 1);
 
     // Handle window resize
     const handleResize = () => {
@@ -237,25 +265,31 @@ const GeometryViewer = () => {
       </div>
 
       {/* Responsive SVG container */}
-      <div className="relative bg-background/30 rounded-lg border border-border/30 overflow-hidden">
+      <div 
+        className="relative bg-background/30 rounded-lg border border-border/30 overflow-hidden"
+        style={{
+          backgroundImage: showPhoto ? `url(${galaxySpiralImage})` : 'none',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {showPhoto && (
+          <div 
+            className="absolute inset-0 bg-background/20 pointer-events-none transition-opacity duration-300"
+            style={{ opacity: 1 - photoOpacity }}
+          />
+        )}
         <svg 
           ref={svgRef} 
-          className="w-full bg-gradient-to-br from-background to-muted/20 touch-manipulation select-none" 
+          className="relative z-10 w-full touch-manipulation select-none" 
           style={{ 
             height: 'clamp(300px, 60vh, 600px)',
             WebkitUserSelect: 'none',
-            touchAction: 'pan-x pan-y'
+            touchAction: 'pan-x pan-y',
+            background: showPhoto ? 'transparent' : 'linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted) / 0.2))'
           }}
         />
-        
-        {showPhoto && (
-          <img
-            src={galaxySpiralImage}
-            alt="Milk Hill Crop Circle"
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-300"
-            style={{ opacity: photoOpacity }}
-          />
-        )}
       </div>
 
       {/* Mobile-optimized controls */}
