@@ -48,42 +48,42 @@ const arrayConfigurations: ArrayConfiguration[] = [
   },
   {
     id: 2,
-    name: "Concentric Ring Array",
-    type: "Circular Phased Array",
-    location: "Wiltshire, England",
-    date: "July 2001",
+    name: "Radial Star Array",
+    type: "6-Petal Flower Formation",
+    location: "Milk Hill, Wiltshire",
+    date: "August 2001",
     image: landscapeViewImage,
-    description: "Perfect concentric circular array formation demonstrating classic circular aperture beam patterns with excellent azimuthal symmetry",
+    description: "Sophisticated 6-petal radial formation featuring symmetrical flower-like geometry with precise angular spacing for directional beam control",
     arrayType: "concentric",
-    elements: 156,
-    frequency: "1.2-8 GHz",
-    beamwidth: "360° azimuthal",
+    elements: 238,
+    frequency: "1.8-10 GHz",
+    beamwidth: "±120° sectored",
     characteristics: [
-      "Concentric ring geometry",
-      "Uniform azimuthal coverage",
-      "Bessel function beam pattern",
-      "Omnidirectional capability",
-      "High side-lobe suppression"
+      "6-fold radial symmetry",
+      "Flower petal geometry",
+      "Sectored beam coverage",
+      "Angular precision design",
+      "Multi-directional capability"
     ]
   },
   {
     id: 3,
-    name: "Hexagonal Cluster Array",
-    type: "Triangular Lattice Array",
-    location: "Wiltshire, England", 
+    name: "Aerial Overview Array",
+    type: "Complex Multi-Pattern Formation",
+    location: "Milk Hill, Wiltshire", 
     date: "August 2001",
     image: aerialOverviewImage,
-    description: "Hexagonal close-packed array structure providing optimal spatial sampling and beam steering with minimal grating lobes",
-    arrayType: "hexagonal",
-    elements: 91,
-    frequency: "3-15 GHz",
-    beamwidth: "±60°",
+    description: "Comprehensive aerial view showcasing the complete formation's intricate geometric relationships and multi-scale array architecture",
+    arrayType: "linear",
+    elements: 409,
+    frequency: "2-12 GHz",
+    beamwidth: "Full coverage",
     characteristics: [
-      "Triangular lattice spacing",
-      "Minimal grating lobes",
-      "High spatial efficiency",
-      "Beam steering optimization",
-      "Close-packed geometry"
+      "Multi-scale geometry",
+      "Hierarchical structure",
+      "Complete formation view",
+      "Geometric complexity",
+      "Integrated array system"
     ]
   }
 ];
