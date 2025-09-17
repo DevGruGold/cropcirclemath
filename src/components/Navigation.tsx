@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { id: "home", label: "Home", path: "/" },
@@ -16,7 +17,14 @@ const Navigation = () => {
   const handleScrollTo = (elementId: string) => {
     // If we're not on the home page, navigate to home first, then scroll
     if (location.pathname !== "/") {
-      window.location.href = `/#${elementId}`;
+      navigate("/");
+      // Use setTimeout to allow the navigation to complete before scrolling
+      setTimeout(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
       return;
     }
     
