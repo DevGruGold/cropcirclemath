@@ -8,10 +8,10 @@ const Navigation = () => {
 
   const navItems = [
     { id: "home", label: "Home", path: "/" },
-    { id: "array-viewer", label: "Array Explorer", section: "array-viewer" },
-    { id: "beam-steering", label: "Beam Steering", section: "beam-steering" },
+    { id: "about", label: "About", path: "/about" },
+    { id: "physics", label: "Physics", path: "/physics" },
+    { id: "geometry", label: "Geometry", path: "/geometry" },
     { id: "mathematics", label: "Mathematics", path: "/mathematics" },
-    { id: "about", label: "AI Assistant", section: "about" }
   ];
 
   const handleScrollTo = (elementId: string) => {
@@ -53,47 +53,31 @@ const Navigation = () => {
 
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
-            {navItems.map((item) => {
-              if (item.section) {
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleScrollTo(item.section)}
-                    className={`
-                      px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm
-                      text-muted-foreground hover:text-foreground hover:bg-card/50
-                    `}
-                  >
-                    {item.label}
-                  </button>
-                );
-              }
-              return (
-                <Link
-                  key={item.id}
-                  to={item.path}
-                  className={`
-                    px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm
-                    ${isActive(item.path)
-                      ? 'text-primary bg-primary/10 glow-hover' 
-                      : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
-                    }
-                  `}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            {navItems.map((item) => (
+              <Link
+                key={item.id}
+                to={item.path}
+                className={`
+                  px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm
+                  ${isActive(item.path)
+                    ? 'text-primary bg-primary/10 glow-hover' 
+                    : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
+                  }
+                `}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
 
           {/* CTA Button */}
           <Button 
             variant="outline"
             size="sm"
-            onClick={() => handleScrollTo('array-viewer')}
+            onClick={() => navigate('/physics')}
             className="border-primary text-primary hover:bg-primary hover:text-primary-foreground glow-hover touch-manipulation"
           >
-            Explore Array
+            Explore Physics
           </Button>
         </div>
       </div>
