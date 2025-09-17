@@ -7,10 +7,10 @@ const Navigation = () => {
 
   const navItems = [
     { id: "home", label: "Home", path: "/" },
-    { id: "array-viewer", label: "Array Explorer", path: "/#array-viewer" },
-    { id: "beam-steering", label: "Beam Steering", path: "/#beam-steering" },
+    { id: "array-viewer", label: "Array Explorer", section: "array-viewer" },
+    { id: "beam-steering", label: "Beam Steering", section: "beam-steering" },
     { id: "mathematics", label: "Mathematics", path: "/mathematics" },
-    { id: "about", label: "AI Assistant", path: "/#about" }
+    { id: "about", label: "AI Assistant", section: "about" }
   ];
 
   const handleScrollTo = (elementId: string) => {
@@ -46,18 +46,14 @@ const Navigation = () => {
           {/* Navigation Links */}
           <div className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => {
-              if (item.path.startsWith("/#")) {
-                const sectionId = item.path.substring(2);
+              if (item.section) {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => handleScrollTo(sectionId)}
+                    onClick={() => handleScrollTo(item.section)}
                     className={`
                       px-3 py-2 rounded-lg transition-all duration-300 font-medium text-sm
-                      ${location.pathname === "/" && location.hash === `#${sectionId}`
-                        ? 'text-primary bg-primary/10 glow-hover' 
-                        : 'text-muted-foreground hover:text-foreground hover:bg-card/50'
-                      }
+                      text-muted-foreground hover:text-foreground hover:bg-card/50
                     `}
                   >
                     {item.label}
