@@ -17,10 +17,10 @@ const Index = () => {
       {/* Mobile-First Hero Section */}
       <section className="relative min-h-[100svh] flex flex-col overflow-hidden">
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 md:opacity-30"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40 md:opacity-50"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background/95" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/75 to-background/90" />
         </div>
         
         {/* Mobile-optimized content order */}
@@ -43,9 +43,9 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-primary text-primary-foreground hover:bg-primary-glow glow-hover px-6 py-4 text-base min-h-[48px] touch-manipulation"
-                onClick={() => document.getElementById('array-viewer')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => document.getElementById('beam-steering')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Explore Interactive Array
+                Try Beam Steering
               </Button>
               <Link to="/mathematics">
                 <Button 
@@ -59,9 +59,15 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Interactive Geometry Viewer - Prominent on mobile */}
+          {/* Interactive Array Explorer - More captivating */}
           <div id="array-viewer" className="flex-1 px-2 md:px-6 pb-4 md:pb-8">
-            <GeometryViewer />
+            <div className="bg-card/50 backdrop-blur-md rounded-lg border border-border/50 p-3 md:p-6">
+              <div className="text-center mb-4">
+                <h3 className="text-lg md:text-2xl font-bold cosmic-text mb-2">Interactive Array Configurations</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">Explore different crop circle array patterns and their beam steering capabilities</p>
+              </div>
+              <ArrayExplorer />
+            </div>
           </div>
         </div>
         
@@ -72,7 +78,7 @@ const Index = () => {
       </section>
 
       {/* Phased Array Physics - Moved up for immediate engagement */}
-      <section id="physics" className="py-12 md:py-20 px-4 md:px-6 bg-muted/10">
+      <section id="beam-steering" className="py-12 md:py-20 px-4 md:px-6 bg-muted/10">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8 md:mb-16">
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 cosmic-text">
@@ -86,9 +92,6 @@ const Index = () => {
           <PhasedArraySimulator />
         </div>
       </section>
-
-      {/* Array Configuration Explorer */}
-      <ArrayExplorer />
 
       {/* Educational Context Section */}
       <section className="py-20 px-6">
@@ -180,23 +183,6 @@ const Index = () => {
               captured using professional aerial photography techniques during the height of the crop circle season.
             </p>
           </Card>
-        </div>
-      </section>
-
-
-      {/* Phased Array Section */}
-      <section id="physics" className="py-20 px-6 bg-muted/20">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 cosmic-text">
-              Phased Array Physics
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Experience how the crop circle geometry creates directional beams, just like HAARP or modern radar systems
-            </p>
-          </div>
-          
-          <PhasedArraySimulator />
         </div>
       </section>
 
