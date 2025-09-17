@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Navigation } from "@/components/Navigation";
 import { GeometryViewer } from "@/components/GeometryViewer";
 import { PhasedArraySimulator } from "@/components/PhasedArraySimulator";
-import { PhotoGallery } from "@/components/PhotoGallery";
+import { ArrayExplorer } from "@/components/ArrayExplorer";
 import { ChatBot } from "@/components/ChatBot";
 import { ApiKeyHelp } from "@/components/ApiKeyHelp";
 import heroImage from "@/assets/milk-hill-galaxy-spiral.jpg";
@@ -87,8 +87,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Photo Gallery Section - After interaction */}
-      <PhotoGallery />
+      {/* Array Configuration Explorer */}
+      <ArrayExplorer />
 
       {/* Educational Context Section */}
       <section className="py-20 px-6">
