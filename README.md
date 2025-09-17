@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# Crop Circle Mathematics
 
-## Project info
+An interactive educational website exploring the mathematical principles and geometric patterns found in crop circle formations, with a focus on the famous Milk Hill formation.
 
-**URL**: https://lovable.dev/projects/d87abe89-fa4d-45a7-a280-1e6681ac6f29
+## Live Site
 
-## How can I edit this code?
+**URL**: https://cropcirclemath.vercel.app/
 
-There are several ways of editing your application.
+## Features
 
-**Use Lovable**
+- **Interactive Array Explorer**: Explore different crop circle formations and their mathematical properties
+- **Phased Array Simulator**: Visualize beam patterns and understand antenna array principles
+- **Geometry Viewer**: Interactive visualization of the 409-circle Milk Hill formation
+- **Mathematical Analysis**: In-depth exploration of geometric relationships and patterns
+- **Educational Content**: Learn about the intersection of mathematics, physics, and crop circle geometry
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/d87abe89-fa4d-45a7-a280-1e6681ac6f29) and start prompting.
+## Development
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+To run this project locally:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
+# Navigate to the project directory
 cd <YOUR_PROJECT_NAME>
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Technologies Used
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **React** - Frontend framework
+- **TypeScript** - Type-safe JavaScript
+- **Vite** - Build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern UI component library
+- **D3.js** - Data visualization and interactive graphics
+- **React Router** - Client-side routing
+- **Lucide React** - Icon library
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/d87abe89-fa4d-45a7-a280-1e6681ac6f29) and click on Share -> Publish.
+This project is deployed on Vercel and automatically updates when changes are pushed to the main branch.
 
-## Can I connect a custom domain to my Lovable project?
+To deploy your own instance:
+1. Fork this repository
+2. Connect it to your Vercel account
+3. Deploy with default settings
 
-Yes, you can!
+## Contributing
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This is an educational project exploring the mathematical beauty of crop circle formations. Contributions that enhance the educational value or improve the visualizations are welcome.
